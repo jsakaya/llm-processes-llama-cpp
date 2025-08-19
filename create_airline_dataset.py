@@ -34,10 +34,10 @@ def create_airline_passenger_data(n_train=50, n_test=20, noise_level=0.1):
     y_all = y_true + noise_level * np.std(y_true) * np.random.randn(total_length)
     
     # Split into train and test
-    x_train = x_all[:n_train].reshape(-1, 1)
-    y_train = y_all[:n_train].reshape(-1, 1)
-    x_test = x_all[n_train:].reshape(-1, 1)
-    y_test = y_all[n_train:].reshape(-1, 1)
+    x_train = x_all[:n_train]
+    y_train = y_all[:n_train]
+    x_test = x_all[n_train:]
+    y_test = y_all[n_train:]
     
     # Also include the true function for plotting
     x_true = x_all
@@ -66,6 +66,6 @@ if __name__ == "__main__":
     print("Created airline passenger dataset with:")
     print(f"Training points: {data['x_train'].shape[0]}")
     print(f"Test points: {data['x_test'].shape[0]}")
-    print(f"X range: {data['x_train'][0,0]:.1f} to {data['x_test'][-1,0]:.1f}")
+    print(f"X range: {data['x_train'][0]:.1f} to {data['x_test'][-1]:.1f}")
     print(f"Y range: {np.min(data['y_train']):.1f} to {np.max(data['y_train']):.1f}")
     print("Saved to: ./data/airline_passengers.pkl")
