@@ -62,7 +62,7 @@ def get_dimension(a):
 
 def _float_to_str(f, num_decimal=None, add_spaces=False):
     """Convert float to string without resorting to scientific notation."""
-    d1 = ctx.create_decimal(repr(f))
+    d1 = ctx.create_decimal(repr(float(f)))
     if num_decimal is not None:
         d1 = round(d1, num_decimal)
     s = format(d1, 'f')

@@ -9,7 +9,10 @@ def init_option_parser():
                         help="Whether to sample or compute log likelihood, or both.")
     parser.add_argument('--experiment_name', type=str, default='test', help='Name of the experiment.')
     parser.add_argument('--data_path', type=str, default='./data/square_20.pkl', help='Path to pkl file with x, y data.')
-    parser.add_argument('--llm_path', type=str, default=None, help='Path to LLM.')
+    parser.add_argument('--backend', type=str, choices=['hf', 'llama_cpp'], default='hf', 
+                        help='The inference backend to use.')
+    parser.add_argument('--llm_path', type=str, default=None, 
+                        help='Path to LLM. For hf, this is a repo ID. For llama_cpp, this is a path to a GGUF file.')
     parser.add_argument("--llm_type", choices=llm_map.keys(), default="llama-2-7B",
                         help="Hugging face model to use.")
     parser.add_argument("--prompt_ordering", choices=["sequential", "random", "distance"], default="distance",

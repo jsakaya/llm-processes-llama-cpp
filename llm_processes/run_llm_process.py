@@ -3,7 +3,6 @@ import os
 
 
 from .plot import plot_samples, plot_images, plot_heatmap
-from .hf_api import get_model_and_tokenizer
 from .parse_args import parse_command_line
 from .compute_nll import compute_nll
 from .sample import sample
@@ -39,6 +38,13 @@ def main():
     args = parse_command_line()
 
     # get the llm and asociated tokenizer
-    model, tokenizer = get_model_and_tokenizer(args.llm_path, args.llm_type)
+    if args.backend == 'hf':
+        from .hf_api import get_model_and_tokenizer
+        model, tokenizer = get_model_and_tokenizer(args.llm_path, args.llm_type)
+    elif args.backend == 'llama_cpp':
+        from .llama_cpp_api import get_model_and_tokenizer
+        model, tokenizer = get_model_and_tokenizer(args.llm_path, args)
+    else:
+        raise ValueError(f"Unknown backend: {args.backend}")
 
     run_llm_process(args=args, model=model, tokenizer=tokenizer)

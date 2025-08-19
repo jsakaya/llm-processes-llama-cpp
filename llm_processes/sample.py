@@ -5,9 +5,19 @@ import numpy as np
 from tqdm import tqdm
 
 from .helpers import construct_prompts, get_num_from_gen, process_generated_results
-from .hf_api import hf_generate_batch, hf_generate
 
-def sample(args, tokenizer, model, results):   
+def sample(args, tokenizer, model, results):
+    # Dynamically select generation function
+    if args.backend == 'hf':
+        from .hf_api import hf_generate_batch, hf_generate
+    elif args.backend == 'llama_cpp':
+        from .llama_cpp_api import llama_cpp_generate_batch
+        def hf_generate_batch(model, tokenizer, prompts, temp, top_p, max_new_tokens):
+            return llama_cpp_generate_batch(model, tokenizer, prompts, temp, top_p, max_new_tokens)
+        def hf_generate(model, tokenizer, input_str, batch_size, **kwargs):
+            prompts = [input_str] * batch_size
+            return llama_cpp_generate_batch(model, tokenizer, prompts, kwargs.get('temp', 1.0), kwargs.get('top_p', 0.9), kwargs.get('max_new_tokens', 50))
+    
     with torch.no_grad():
         # generate
         results['gen'] = [[] for _ in range(len(results['data']['x_test']))]
